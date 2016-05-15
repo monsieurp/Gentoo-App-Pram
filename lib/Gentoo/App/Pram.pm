@@ -4,6 +4,8 @@ package Gentoo::App::Pram;
 use warnings;
 use strict;
 
+our $VERSION = '0.001000';
+
 use feature 'say';
 
 use Term::ANSIColor qw/:constants colored/;
