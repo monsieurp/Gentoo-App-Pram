@@ -10,6 +10,7 @@ requires 'File::Temp';
 requires 'HTTP::Tiny';
 requires 'Getopt::Long';
 requires 'Pod::Usage';
+requires 'constant';
 
 on test => sub {
   requires 'Test::More' => '0.89'; # done_testing
