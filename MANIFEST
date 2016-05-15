@@ -6,4 +6,4 @@ META.yml
 cpanfile
 lib/Gentoo/App/Pram.pm
 metamerge.json
-script/bin/pram
+script/pram
