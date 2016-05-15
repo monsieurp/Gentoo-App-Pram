@@ -3,4 +3,4 @@ MANIFEST
 META.json
 META.yml
 lib/Gentoo/App/Pram.pm
-script/pram
+script/bin/pram
