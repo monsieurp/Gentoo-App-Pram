@@ -16,4 +16,14 @@ provides:
   Gentoo::App::Pram:
     file: lib/Gentoo/App/Pram.pm
     version: '0.001000'
+requires:
+  Encode: '0'
+  File::Basename: '0'
+  File::Temp: '0'
+  File::Which: '0'
+  Getopt::Long: '0'
+  HTTP::Tiny: '0'
+  Pod::Usage: '0'
+  Term::ANSIColor: '0'
+  perl: '5.010'
 version: '0.001000'
