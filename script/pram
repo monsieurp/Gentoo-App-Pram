@@ -14,19 +14,11 @@ __END__
 
 =head1 NAME
 
-pram - Fetch a GitHub Pull Request as an am-like patch and apply it onto HEAD
-of the current git repository.
+pram - Standalone script for the Gentoo::App::Pram module
 
 =head1 DESCRIPTION
 
-pram is a frontend script to the Gentoo::App::Pram module.
-
-This script helps you fetch Pull Requests from GitHub's CDN as an am-like
-patch. To facilitate the closing of pull requests, the script automatically
-adds a "Closes:" header to each commit contained in the PR. The patch in
-question will then appear in your favourite editor for a final review. The
-script eventually asks whether the patch is to be applied onto HEAD of the
-current git repository. If not, the patch is deleted.
+pram is the frontend script for the Gentoo::App::Pram module.
 
 =head1 SYNOPSIS
 
@@ -42,6 +34,17 @@ pram <Pull Request #>
  # This command will fetch PR 123 from the GitHub repository 'gentoo/gentoo'
  # and display it in emacs.
  $ pram --editor emacs --repository gentoo/gentoo 123
+
+=head1 VERSION
+
+version 0.001
+
+=head1 COPYRIGHT AND LICENSE
+
+This software is copyright (c) 2016 by Patrice Clement.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
 
 =head1 AUTHOR
 

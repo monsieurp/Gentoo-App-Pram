@@ -72,7 +72,7 @@ sub run {
     $self->apply_patch(
         $editor,
         $git_command,
-        $self->add_close_header(
+        $self->add_closes_header(
             $close_url,
             $self->fetch_patch(
                 $patch_url
@@ -100,8 +100,8 @@ sub fetch_patch {
     return decode('UTF-8', $patch);
 }
 
-sub add_close_header {
-    @_ == 3 || die qq#Usage: add_close_header(close_url, patch)\n#;
+sub add_closes_header {
+    @_ == 3 || die qq#Usage: add_closes_header(close_url, patch)\n#;
     my ($self, $close_url, $patch) = @_;
 
     print "$ok: Adding \"Closes:\" header... ";
@@ -112,6 +112,8 @@ sub add_close_header {
     
     for (split /\n/, $patch) {
         chomp;
+        # Some folks might add this header already in their PR
+        # so don't add it twice.
         if ($patch !~ /Closes:/) {
             if (/(\A---\Z)/) { 
                 s/$1/$header/g; 
@@ -139,10 +141,9 @@ sub apply_patch {
     system $editor => $patch_location;
     
     print "$merge? Do you want to apply this patch and merge this PR? [y/n] ";
+
     chomp(my $answer = <STDIN>);
-    
     if ($answer =~ /^[Yy]$/) {
-    
         $git_command = "$git_command $patch_location";
         say "$yes! Launching '$git_command' ...";
     
@@ -167,21 +168,31 @@ __END__
 
 =head1 NAME
 
-Gentoo::App::Pram - Backend module for the pram script.
+Gentoo::App::Pram - Library to fetch a GitHub Pull Request as an am-like patch.
 
-=head1 AUTHOR
+=head1 DESCRIPTION
 
-Patrice Clement <monsieurp@gentoo.org>
+The purpose of this modules is to fetch Pull Requests from GitHub's CDN as an
+am-like patch in order to facilitate the merging and closing of pull requests.
+
+Tt automatically adds a "Closes:" header to each commit contained in the PR.
+The patch in question will then appear in your favourite editor for a final
+review. The script eventually asks whether the patch is to be applied onto HEAD
+of the current git repository. If not, the patch is deleted.
 
 =head1 VERSION
 
 version 0.001
 
 =head1 COPYRIGHT AND LICENSE
- 
+
 This software is copyright (c) 2016 by Patrice Clement.
- 
+
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
+
+=head1 AUTHOR
+
+Patrice Clement <monsieurp@gentoo.org>
 
 =cut
