@@ -8,7 +8,7 @@ our $VERSION = '0.001000';
 
 use feature 'say';
 
-use Term::ANSIColor qw/:constants colored/;
+use Term::ANSIColor qw/colored/;
 use File::Basename qw/basename/;
 use File::Which qw/which/;
 use Encode qw/decode/;
