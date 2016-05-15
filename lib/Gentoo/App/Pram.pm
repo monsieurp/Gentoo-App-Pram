@@ -80,7 +80,7 @@ sub run {
 }
 
 sub fetch_patch {
-    @_ == 2 || die (q/Usage: fetch_patch(patch_url)/ . "\n");
+    @_ == 2 || die qq#Usage: fetch_patch(patch_url)\n#;
     my ($self, $patch_url) = @_;
 
     print "$ok! Fetching $patch_url... ";
@@ -88,7 +88,7 @@ sub fetch_patch {
     my $response = HTTP::Tiny->new->get($patch_url);
     my $status = $response->{status};
     
-    $status != 200 and die "\n$error! Got HTTP status $status when querying URL '$patch_url'!";
+    $status != 200 and die qq#\n$error! Unreachable URL! Got HTTP status $status!\n#;
     
     my $patch = $response->{content};
     chomp $patch;
@@ -99,7 +99,7 @@ sub fetch_patch {
 }
 
 sub add_close_header {
-    @_ == 3 || die (q/Usage: add_close_header(close_url, patch)/ . "\n");
+    @_ == 3 || die qq#Usage: add_close_header(close_url, patch)\n#;
     my ($self, $close_url, $patch) = @_;
 
     print "$ok: Adding \"Closes:\" header... ";
@@ -126,11 +126,11 @@ sub add_close_header {
 }
 
 sub apply_patch {
-    @_ == 4 || die (q/Usage: apply_patch(editor, git_command, patch)/ . "\n");
+    @_ == 4 || die qq#Usage: apply_patch(editor, git_command, patch)\n#;
     my ($self, $editor, $git_command, $patch) = @_;
 
     my $patch_location = File::Temp->new() . '.patch';
-    open my $fh, '>:encoding(UTF-8)', $patch_location || die "$error! Can't write to $patch_location: $!!";
+    open my $fh, '>:encoding(UTF-8)', $patch_location || die qq#$error! Can't write to $patch_location: $!!\n#;
     print $fh $patch;
     close $fh;
 
@@ -156,8 +156,8 @@ sub apply_patch {
         say "$no! Bailing out.";
     }
     
-    unlink $patch_location || die "$error! Couldn't remove '$patch_location'!";
-    say "$ok! Removed '$patch_location'!";
+    unlink $patch_location || die qq#$error! Couldn't remove '$patch_location'!\n#;
+    say "$ok! Removed $patch_location.";
 }
 
 1;
