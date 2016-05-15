@@ -7,3 +7,4 @@ cpanfile
 lib/Gentoo/App/Pram.pm
 metamerge.json
 script/pram
+t/00-compile.t
