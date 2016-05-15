@@ -14,6 +14,11 @@ use File::Which qw/which/;
 use Encode qw/decode/;
 use File::Temp;
 use HTTP::Tiny;
+use constant E_ERROR => colored('ERROR', 'red');
+use constant E_NO    => colored('NO',    'red');
+use constant E_YES   => colored('YES',   'green');
+use constant E_OK    => colored('OK',    'green');
+use constant E_MERGE => colored('MERGE', 'blue');
 
 use Getopt::Long;
 use Pod::Usage;
@@ -40,14 +45,6 @@ sub new_with_opts {
     return $class->new(\%opts);
 }
 
-my $error = colored('ERROR', 'red');
-my $no    = colored('NO', 'red');
-
-my $yes   = colored('YES', 'green');
-my $ok    = colored('OK', 'green');
-
-my $merge = colored('MERGE', 'blue');
-
 sub run {
     my ($self) = @_;
 
@@ -59,12 +56,12 @@ sub run {
     $self->{man} and pod2usage(-verbose => 2);
 
     $pr_number || pod2usage(
-        -message => "$error! You must specify a Pull Request number!\n",
+        -message => E_ERROR . "! You must specify a Pull Request number!\n",
         -verbose => 1
     );
     
     $pr_number =~ /^\d+$/ || pod2usage(
-        -message => "$error! \"$pr_number\" is NOT a number!\n",
+        -message => E_ERROR . "! \"$pr_number\" is NOT a number!\n",
         -verbose => 1
     );
 
@@ -93,12 +90,12 @@ sub fetch_patch {
     @_ == 2 || die qq#Usage: fetch_patch(patch_url)\n#;
     my ($self, $patch_url) = @_;
 
-    print "$ok! Fetching $patch_url... ";
+    print E_OK . "! Fetching $patch_url... ";
 
     my $response = HTTP::Tiny->new->get($patch_url);
     my $status = $response->{status};
     
-    $status != 200 and die qq#\n$error! Unreachable URL! Got HTTP status $status!\n#;
+    $status != 200 and die qq#\n# . E_ERROR . qq#! Unreachable URL! Got HTTP status $status!\n#;
     
     my $patch = $response->{content};
     chomp $patch;
@@ -112,8 +109,8 @@ sub add_closes_header {
     @_ == 3 || die qq#Usage: add_closes_header(close_url, patch)\n#;
     my ($self, $close_url, $patch) = @_;
 
-    print "$ok: Adding \"Closes:\" header... ";
-    my $confirm = $no;
+    print E_OK . ": Adding \"Closes:\" header... ";
+    my $confirm = E_NO;
     
     my $header = "Closes: $close_url\n---";
     my @patch = ();
@@ -125,7 +122,7 @@ sub add_closes_header {
         if ($patch !~ /Closes:/) {
             if (/(\A---\Z)/) { 
                 s/$1/$header/g; 
-                $confirm = $yes;
+                $confirm = E_YES;
             }
         }
         push @patch, "$_\n";
@@ -141,33 +138,33 @@ sub apply_patch {
     my ($self, $editor, $git_command, $patch) = @_;
 
     my $patch_location = File::Temp->new() . '.patch';
-    open my $fh, '>:encoding(UTF-8)', $patch_location || die qq#$error! Can't write to $patch_location: $!!\n#;
+    open my $fh, '>:encoding(UTF-8)', $patch_location || die E_ERROR . qq#! Can't write to $patch_location: $!!\n#;
     print $fh $patch;
     close $fh;
 
-    say "$ok! Opening $patch_location with $editor ...";
+    say E_OK . "! Opening $patch_location with $editor ...";
     system $editor => $patch_location;
     
-    print "$merge? Do you want to apply this patch and merge this PR? [y/n] ";
+    print E_MERGE . "? Do you want to apply this patch and merge this PR? [y/n] ";
 
     chomp(my $answer = <STDIN>);
     if ($answer =~ /^[Yy]$/) {
         $git_command = "$git_command $patch_location";
-        say "$yes! Launching '$git_command' ...";
+        say E_YES . "! Launching '$git_command' ...";
     
         my $exit = system join ' ', $git_command;
         if ($exit eq 0) {
-            say "$ok! git am exited gracefully!";
+            say E_OK . "! git am exited gracefully!";
         } else {
-            say "$error! git am failed!";
+            say E_OK . "! git am failed!";
             exit $exit;
         }
     } else {
-        say "$no! Bailing out.";
+        say E_NO . "! Bailing out.";
     }
     
-    unlink $patch_location || die qq#$error! Couldn't remove '$patch_location'!\n#;
-    say "$ok! Removed $patch_location.";
+    unlink $patch_location || die E_ERROR . qq#! Couldn't remove '$patch_location'!\n#;
+    say E_OK . "! Removed $patch_location.";
 }
 
 1;
