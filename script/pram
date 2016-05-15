@@ -8,7 +8,7 @@ use lib './lib';
 
 use Gentoo::App::Pram;
 
-Gentoo::App::Pram->run(\@ARGV);
+Gentoo::App::Pram->new_with_opts->run();
 
 __END__
 
