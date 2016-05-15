@@ -7,6 +7,7 @@ use strict;
 use feature 'say';
 
 use Term::ANSIColor qw/:constants colored/;
+use File::Basename qw/basename/;
 use File::Which qw/which/;
 use Encode qw/decode/;
 use File::Temp;
@@ -37,7 +38,7 @@ my $ok    = colored('OK', 'green');
 
 my $merge = colored('MERGE', 'blue');
 
-my $vars;
+$| = 1;
 
 sub run {
     my ($self, $argv) = @_;
@@ -48,7 +49,7 @@ sub run {
     $opts{man} and pod2usage(-verbose => 2);
 
     $pr_number || pod2usage(
-        -message => "$error! You must specify a PR number!\n",
+        -message => "$error! You must specify a Pull Request number!\n",
         -verbose => 1
     );
     
@@ -57,52 +58,53 @@ sub run {
         -verbose => 1
     );
 
+    # Defaults to 'gentoo/gentoo' because we're worth it.
+    my $repo_name   = $opts{repository} || 'gentoo/gentoo';
+    my $editor      = $opts{editor} || $ENV{EDITOR} || 'less';
 
-    # Variables used throughout the script.
-    $vars = {
-        # Defaults to 'gentoo/gentoo' because we're worth it.
-        repo_name   => $opts{repository} || 'gentoo/gentoo',
-        git_command => which('git') . ' am -s -S',
-        pr_number   => $pr_number,
-        editor      => $opts{editor} || $ENV{EDITOR} || 'less'
-    };
-
-    $vars->{git_url} =
-        "https://patch-diff.githubusercontent.com/raw/$vars->{repo_name}/pull";
+    my $git_command = which('git') . ' am -s -S';
+    my $patch_url   = "https://patch-diff.githubusercontent.com/raw/$repo_name/pull/$pr_number.patch";
+    my $close_url   = "https://github.com/$repo_name/pull/$pr_number";
     
     # Go!
-    $self->apply_patch($self->format_patch($self->fetch_patch()));
+    $self->apply_patch(
+        $editor,
+        $git_command,
+        $self->add_close_header(
+            $close_url,
+            $self->fetch_patch(
+                $patch_url
+            )
+        )
+    );
 }
 
 sub fetch_patch {
-    my $self = shift;
+    @_ == 2 || die (q/Usage: fetch_patch(patch_url)/ . "\n");
+    my ($self, $patch_url) = @_;
 
-    my ($pr_number, $git_url) = ($vars->{pr_number}, $vars->{git_url});
-
-    say "$ok! Getting PR $pr_number...";
-
-    my $patch_name = "$pr_number.patch";
-    my $patch_url = "$git_url/$patch_name";
+    print "$ok! Fetching $patch_url... ";
 
     my $response = HTTP::Tiny->new->get($patch_url);
     my $status = $response->{status};
     
-    $status != 200 and die "$error! Got HTTP status $status when querying URL '$patch_url'!";
+    $status != 200 and die "\n$error! Got HTTP status $status when querying URL '$patch_url'!";
     
     my $patch = $response->{content};
     chomp $patch;
+
+    print "OK!\n";
     
     return decode('UTF-8', $patch);
 }
 
-sub format_patch {
-    my ($self, $patch) = @_;
+sub add_close_header {
+    @_ == 3 || die (q/Usage: add_close_header(close_url, patch)/ . "\n");
+    my ($self, $close_url, $patch) = @_;
 
-    my ($pr_number, $repo_name) = ($vars->{pr_number}, $vars->{repo_name});
-
-    my $close_url = "https://github.com/$repo_name/pull/$pr_number";
-    my $header = "Closes: $close_url\n---";
+    print "$ok: Adding \"Closes:\" header... ";
     
+    my $header = "Closes: $close_url\n---";
     my @patch = ();
     
     if ($patch =~ /Closes:/) {
@@ -117,25 +119,25 @@ sub format_patch {
             push @patch, "$_\n";
         }
     }
-    
+
+    print "OK!\n";
+
     return join '', @patch;
 }
 
 sub apply_patch {
-    my ($self, $patch) = @_;
+    @_ == 4 || die (q/Usage: apply_patch(editor, git_command, patch)/ . "\n");
+    my ($self, $editor, $git_command, $patch) = @_;
 
     my $patch_location = File::Temp->new() . '.patch';
-    
     open my $fh, '>:encoding(UTF-8)', $patch_location || die "$error! Can't write to $patch_location: $!!";
     print $fh $patch;
     close $fh;
 
-    my ($pr_number, $editor, $git_command) = 
-        ($vars->{pr_number}, $vars->{editor}, $vars->{git_command});
-    
+    say "$ok! Opening $patch_location with $editor ...";
     system $editor => $patch_location;
     
-    print "$merge? Do you want to apply this patch and merge PR $pr_number? [y/n] ";
+    print "$merge? Do you want to apply this patch and merge this PR? [y/n] ";
     chomp(my $answer = <STDIN>);
     
     if ($answer =~ /^[Yy]$/) {

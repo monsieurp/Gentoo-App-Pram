@@ -14,33 +14,34 @@ __END__
 
 =head1 NAME
 
-pram - Fetch a Github pull request as an am-like patch and apply it onto HEAD
+pram - Fetch a GitHub Pull Request as an am-like patch and apply it onto HEAD
 of the current git repository.
 
 =head1 DESCRIPTION
 
-pram is a frontend script to the Gentoo::App::Pram module. This script helps
-you fetch pull requests from Github's CDN as an am-like patch. To facilitate
-the closing of pull requests, the script automatically adds a "Closes:" header
-to each commit contained in the PR. The patch in question will then appear in
-your favourite editor for a final review.  The script eventually asks whether
-the patch is to be applied onto HEAD of the current git repository. If not, the
-patch is deleted.
+pram is a frontend script to the Gentoo::App::Pram module.
+
+This script helps you fetch Pull Requests from GitHub's CDN as an am-like
+patch. To facilitate the closing of pull requests, the script automatically
+adds a "Closes:" header to each commit contained in the PR. The patch in
+question will then appear in your favourite editor for a final review. The
+script eventually asks whether the patch is to be applied onto HEAD of the
+current git repository. If not, the patch is deleted.
 
 =head1 SYNOPSIS
 
-pram <pull request number>
+pram <Pull Request #>
 
- --repository|r <repository>   Set repository to fetch PR from to <repository>.
- --editor|e     <editor>       Set editor to visualise patch in to <editor>.
- --help|h                      Display help.
- --man|m                       Display a man page.
+ --repository|r <repository> Set repository to fetch PR from.
+ --editor|e     <editor>     Set editor to visualise patch in.
+ --help|h                    Display help.
+ --man|m                     Display a man page.
 
 =head1 EXAMPLE
 
- # This command will fetch PR 123 from the GitHub repository 'monsieurp/gentools'
+ # This command will fetch PR 123 from the GitHub repository 'gentoo/gentoo'
  # and display it in emacs.
- $ pram --editor emacs --repository monsieurp/gentools 123
+ $ pram --editor emacs --repository gentoo/gentoo 123
 
 =head1 AUTHOR
 
