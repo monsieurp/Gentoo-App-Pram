@@ -18,19 +18,27 @@ use HTTP::Tiny;
 use Getopt::Long;
 use Pod::Usage;
 
-my @opts = (
-    'repository|r=s',
-    'editor|e=s',
-    'help|h',
-    'man|m'
-);
+sub new {
+    my ( $class, @args ) = @_;
+    return bless { ref $args[0] ? %{ $args[0] } : @args }, $class;
+}
 
-my %opts;
-
-GetOptions(
-    \%opts,
-    @opts
-);
+sub new_with_opts {
+    my ( $class ) =  @_;
+    my @opts = (
+        'repository|r=s',
+        'editor|e=s',
+        'help|h',
+        'man|m'
+    );
+    my %opts;
+    GetOptions(
+        \%opts,
+        @opts
+    );
+    $opts{pr_number} = shift @ARGV;
+    return $class->new(\%opts);
+}
 
 my $error = colored('ERROR', 'red');
 my $no    = colored('NO', 'red');
@@ -40,15 +48,15 @@ my $ok    = colored('OK', 'green');
 
 my $merge = colored('MERGE', 'blue');
 
-$| = 1;
-
 sub run {
-    my ($self, $argv) = @_;
+    my ($self) = @_;
 
-    my $pr_number = shift @{$argv};
+    my $pr_number = $self->{pr_number};
 
-    $opts{help} and pod2usage(-verbose => 1);
-    $opts{man} and pod2usage(-verbose => 2);
+    $| = 1;
+
+    $self->{help} and pod2usage(-verbose => 1);
+    $self->{man} and pod2usage(-verbose => 2);
 
     $pr_number || pod2usage(
         -message => "$error! You must specify a Pull Request number!\n",
@@ -61,8 +69,8 @@ sub run {
     );
 
     # Defaults to 'gentoo/gentoo' because we're worth it.
-    my $repo_name   = $opts{repository} || 'gentoo/gentoo';
-    my $editor      = $opts{editor} || $ENV{EDITOR} || 'less';
+    my $repo_name   = $self->{repository} || 'gentoo/gentoo';
+    my $editor      = $self->{editor} || $ENV{EDITOR} || 'less';
 
     my $git_command = which('git') . ' am -s -S';
     my $patch_url   = "https://patch-diff.githubusercontent.com/raw/$repo_name/pull/$pr_number.patch";
