@@ -36,6 +36,11 @@
             "Term::ANSIColor" : "0",
             "perl" : "5.010"
          }
+      },
+      "test" : {
+         "requires" : {
+            "Test::More" : "0.89"
+         }
       }
    },
    "provides" : {

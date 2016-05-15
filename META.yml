@@ -2,7 +2,8 @@
 abstract: 'Library to fetch a GitHub Pull Request as an am-like patch.'
 author:
   - 'Patrice Clement <monsieurp@gentoo.org>'
-build_requires: {}
+build_requires:
+  Test::More: '0.89'
 configure_requires:
   Module::Build::Tiny: '0.034'
 dynamic_config: 0
