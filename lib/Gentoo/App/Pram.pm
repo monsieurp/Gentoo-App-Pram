@@ -112,7 +112,7 @@ sub add_closes_header {
     
     for (split /\n/, $patch) {
         chomp;
-        # Some folks might add this header already in their PR
+        # Some folks might add this header already to their PR
         # so don't add it twice.
         if ($patch !~ /Closes:/) {
             if (/(\A---\Z)/) { 
