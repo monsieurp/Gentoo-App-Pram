@@ -105,7 +105,7 @@ sub add_closes_header {
     my ($self, $close_url, $patch) = @_;
 
     print "$ok: Adding \"Closes:\" header... ";
-    my $confirm = "NO";
+    my $confirm = $no;
     
     my $header = "Closes: $close_url\n---";
     my @patch = ();
@@ -117,7 +117,7 @@ sub add_closes_header {
         if ($patch !~ /Closes:/) {
             if (/(\A---\Z)/) { 
                 s/$1/$header/g; 
-                $confirm = "YES";
+                $confirm = $yes;
             }
         }
         push @patch, "$_\n";
