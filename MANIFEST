@@ -1,0 +1,6 @@
+Build.PL
+MANIFEST
+META.json
+META.yml
+lib/Gentoo/App/Pram.pm
+script/pram

@@ -1,0 +1,19 @@
+---
+abstract: 'Backend module for the pram script.'
+author:
+  - 'Patrice Clement <monsieurp@gentoo.org>'
+build_requires: {}
+configure_requires:
+  Module::Build::Tiny: '0.034'
+dynamic_config: 0
+generated_by: 'App::ModuleBuildTiny version 0.011, CPAN::Meta::Converter version 2.150001'
+license: perl
+meta-spec:
+  url: http://module-build.sourceforge.net/META-spec-v1.4.html
+  version: '1.4'
+name: Gentoo-App-Pram
+provides:
+  Gentoo::App::Pram:
+    file: lib/Gentoo/App/Pram.pm
+    version: '0.001000'
+version: '0.001000'

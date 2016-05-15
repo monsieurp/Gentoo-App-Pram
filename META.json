@@ -1,0 +1,36 @@
+{
+   "abstract" : "Backend module for the pram script.",
+   "author" : [
+      "Patrice Clement <monsieurp@gentoo.org>"
+   ],
+   "dynamic_config" : 0,
+   "generated_by" : "App::ModuleBuildTiny version 0.011",
+   "license" : [
+      "perl_5"
+   ],
+   "meta-spec" : {
+      "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
+      "version" : "2"
+   },
+   "name" : "Gentoo-App-Pram",
+   "prereqs" : {
+      "configure" : {
+         "requires" : {
+            "Module::Build::Tiny" : "0.034"
+         }
+      },
+      "develop" : {
+         "requires" : {
+            "App::ModuleBuildTiny" : "0.011"
+         }
+      }
+   },
+   "provides" : {
+      "Gentoo::App::Pram" : {
+         "file" : "lib/Gentoo/App/Pram.pm",
+         "version" : "0.001000"
+      }
+   },
+   "release_status" : "stable",
+   "version" : "0.001000"
+}
