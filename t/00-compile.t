@@ -8,5 +8,3 @@ use Test::More;
 require_ok("Gentoo::App::Pram");
 
 done_testing;
-
-

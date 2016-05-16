@@ -1,12 +1,10 @@
 #!/usr/bin/env perl
 package Gentoo::App::Pram;
 
-use warnings;
-use strict;
-
 our $VERSION = '0.001000';
 
-use feature 'say';
+use warnings;
+use strict;
 
 use Term::ANSIColor qw/colored/;
 use File::Basename qw/basename/;
@@ -14,6 +12,7 @@ use File::Which qw/which/;
 use Encode qw/decode/;
 use File::Temp;
 use HTTP::Tiny;
+
 use constant E_ERROR => colored('ERROR', 'red');
 use constant E_NO    => colored('NO',    'red');
 use constant E_YES   => colored('YES',   'green');
@@ -56,12 +55,12 @@ sub run {
     $self->{man} and pod2usage(-verbose => 2);
 
     $pr_number || pod2usage(
-        -message => E_ERROR . "! You must specify a Pull Request number!\n",
+        -message => E_ERROR . qq#! You must specify a Pull Request number!\n#,
         -verbose => 1
     );
     
     $pr_number =~ /^\d+$/ || pod2usage(
-        -message => E_ERROR . "! \"$pr_number\" is NOT a number!\n",
+        -message => E_ERROR . qq#! "$pr_number" is NOT a number!\n#,
         -verbose => 1
     );
 
