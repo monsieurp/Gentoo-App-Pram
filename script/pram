@@ -1,10 +1,7 @@
 #!/usr/bin/env perl
+
 use warnings;
 use strict;
-
-use feature 'say';
-
-use lib './lib';
 
 use Gentoo::App::Pram;
 
