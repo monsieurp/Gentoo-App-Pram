@@ -90,17 +90,17 @@ sub fetch_patch {
     @_ == 2 || die qq#Usage: fetch_patch(patch_url)\n#;
     my ($self, $patch_url) = @_;
 
-    print E_OK . "! Fetching $patch_url... ";
+    print "Fetching $patch_url ... ";
 
     my $response = HTTP::Tiny->new->get($patch_url);
     my $status = $response->{status};
     
-    $status != 200 and die qq#\n# . E_ERROR . qq#! Unreachable URL! Got HTTP status $status!\n#;
+    $status != 200 and die "\n" . E_ERROR . qq#! Unreachable URL! Got HTTP status $status!\n#;
     
     my $patch = $response->{content};
     chomp $patch;
 
-    print "OK!\n";
+    print E_OK . "!\n";
     
     return decode('UTF-8', $patch);
 }
@@ -109,7 +109,7 @@ sub add_closes_header {
     @_ == 3 || die qq#Usage: add_closes_header(close_url, patch)\n#;
     my ($self, $close_url, $patch) = @_;
 
-    print E_OK . ": Adding \"Closes:\" header... ";
+    print qq#Adding "Closes:" header ... #;
     my $confirm = E_NO;
     
     my $header = "Closes: $close_url\n---";
@@ -142,29 +142,30 @@ sub apply_patch {
     print $fh $patch;
     close $fh;
 
-    say E_OK . "! Opening $patch_location with $editor ...";
-    system $editor => $patch_location;
+    print "Opening $patch_location with $editor ... ";
+    my $exit = system $editor => $patch_location;
+    $exit eq 0 || die E_ERROR . qq#! Could not open $patch_location: $!!\n#;
+    print E_OK . "!\n";
     
     print E_MERGE . "? Do you want to apply this patch and merge this PR? [y/n] ";
 
     chomp(my $answer = <STDIN>);
+
     if ($answer =~ /^[Yy]$/) {
         $git_command = "$git_command $patch_location";
-        say E_YES . "! Launching '$git_command' ...";
+        print E_YES . "!\n";
+        print "Launching '$git_command' ... ";
     
-        my $exit = system join ' ', $git_command;
-        if ($exit eq 0) {
-            say E_OK . "! git am exited gracefully!";
-        } else {
-            say E_OK . "! git am failed!";
-            exit $exit;
-        }
+        $exit = system join ' ', $git_command;
+        $exit eq 0 || die E_ERROR . qq#! Error when launching '$git_command': $!!\n#;
+        print E_OK . "!\n";
     } else {
-        say E_NO . "! Bailing out.";
+        print E_NO . "!\nBailing out.\n";
     }
     
+    print "Removing $patch_location ... ";
     unlink $patch_location || die E_ERROR . qq#! Couldn't remove '$patch_location'!\n#;
-    say E_OK . "! Removed $patch_location.";
+    print E_OK . "!\n";
 }
 
 1;
