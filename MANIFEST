@@ -1,10 +1,13 @@
 Build.PL
+Changes
 MANIFEST
 MANIFEST.SKIP
 META.json
 META.yml
+README.pod
 cpanfile
 lib/Gentoo/App/Pram.pm
+lib/Gentoo/App/Pram.pod
 metamerge.json
 script/pram
 t/00-compile.t
