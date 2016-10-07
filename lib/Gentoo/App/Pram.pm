@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 package Gentoo::App::Pram;
 
-our $VERSION = '0.001000';
+our $VERSION = '0.002000';
 
 use warnings;
 use strict;
@@ -68,7 +68,7 @@ sub run {
     my $repo_name   = $self->{repository} || 'gentoo/gentoo';
     my $editor      = $self->{editor} || $ENV{EDITOR} || 'less';
 
-    my $git_command = which('git') . ' am -s -S';
+    my $git_command = which('git') . ' am --keep-cr -s -S';
     my $patch_url   = "https://patch-diff.githubusercontent.com/raw/$repo_name/pull/$pr_number.patch";
     my $close_url   = "https://github.com/$repo_name/pull/$pr_number";
     
@@ -203,7 +203,7 @@ functions also shows $patch in $editor for a final review.
 
 =head1 VERSION
 
-version 0.001
+version 0.002
 
 =head1 COPYRIGHT AND LICENSE
 
@@ -214,8 +214,6 @@ the same terms as the Perl 5 programming language system itself.
 
 =head1 AUTHOR
 
-Patrice Clement <monsieurp@gentoo.org>
-
-Kent Fredric <kentfredric@gmail.com> also contributed a great deal of patches.
+Patrice Clement <monsieurp@gentoo.org> and Kent Fredric <kentnl@gentoo.org>.
 
 =cut

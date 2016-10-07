@@ -1,2 +1,7 @@
+0.002000
+- Minor update:
+  Add `--keep-cr' to the list of options given to git-am. Indeed a few Gentoo
+  patches need to retain CRs to apply cleanly.
+
 0.001000
-- Initial Version
+- Initial version.
