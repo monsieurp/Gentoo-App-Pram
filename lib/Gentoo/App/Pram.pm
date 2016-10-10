@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 package Gentoo::App::Pram;
 
-our $VERSION = '0.002000';
+our $VERSION = '0.003000';
 
 use warnings;
 use strict;
@@ -203,7 +203,7 @@ functions also shows $patch in $editor for a final review.
 
 =head1 VERSION
 
-version 0.002
+version 0.003
 
 =head1 COPYRIGHT AND LICENSE
 

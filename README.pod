@@ -30,7 +30,7 @@ functions also shows $patch in $editor for a final review.
 
 =head1 VERSION
 
-version 0.002
+version 0.003
 
 =head1 COPYRIGHT AND LICENSE
 
@@ -41,6 +41,6 @@ the same terms as the Perl 5 programming language system itself.
 
 =head1 AUTHOR
 
-Patrice Clement <monsieurp@gentoo.org> and Kent Fredric <kentln@gentoo.org>.
+Patrice Clement <monsieurp@gentoo.org>, Kent Fredric <kentln@gentoo.org>.
 
 =cut

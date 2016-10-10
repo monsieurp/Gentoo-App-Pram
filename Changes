@@ -1,3 +1,6 @@
+0.003000
+- Because I suck at making releases. :[
+
 0.002000
 - Minor update:
   Add `--keep-cr' to the list of options given to git-am. Indeed a few Gentoo

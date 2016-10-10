@@ -2,7 +2,7 @@
 abstract: 'Library to fetch a GitHub Pull Request as an am-like patch.'
 author:
   - 'Patrice Clement <monsieurp@gentoo.org>'
-  - 'Kent Fredric <kentfredric@gmail.com> also contributed a great deal of patches.'
+  - 'Kent Fredric <kentnl@gentoo.org>'
 build_requires:
   Test::More: '0.89'
 configure_requires:
@@ -17,7 +17,7 @@ name: Gentoo-App-Pram
 provides:
   Gentoo::App::Pram:
     file: lib/Gentoo/App/Pram.pm
-    version: '0.002000'
+    version: '0.003000'
 requires:
   Encode: '0'
   File::Basename: '0'
@@ -31,4 +31,4 @@ requires:
   perl: '5.010'
 resources:
   repository: https://github.com/monsieurp/Gentoo-App-Pram/
-version: '0.002000'
+version: '0.003000'
