@@ -30,7 +30,7 @@ functions also shows $patch in $editor for a final review.
 
 =head1 VERSION
 
-version 0.003
+version 0.004
 
 =head1 COPYRIGHT AND LICENSE
 
