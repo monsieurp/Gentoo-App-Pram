@@ -23,6 +23,7 @@ pram <Pull Request #>
 
  --repository|r <repository> Set repository to fetch PR from.
  --editor|e     <editor>     Set editor to visualise patch in.
+ --signoff|-s                Pass --signoff option to git am.
  --help|h                    Display help.
  --man|m                     Display a man page.
 

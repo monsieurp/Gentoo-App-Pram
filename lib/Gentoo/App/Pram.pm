@@ -32,6 +32,7 @@ sub new_with_opts {
     my @opts = (
         'repository|r=s',
         'editor|e=s',
+        'signoff|s',
         'help|h',
         'man|m'
     );
@@ -68,7 +69,9 @@ sub run {
     my $repo_name   = $self->{repository} || 'gentoo/gentoo';
     my $editor      = $self->{editor} || $ENV{EDITOR} || 'less';
 
-    my $git_command = which('git') . ' am --keep-cr -s -S';
+    my $git_command = which('git') . ' am --keep-cr -S';
+    $self->{signoff} and $git_command = "$git_command -s";
+
     my $patch_url   = "https://patch-diff.githubusercontent.com/raw/$repo_name/pull/$pr_number.patch";
     my $close_url   = "https://github.com/$repo_name/pull/$pr_number";
     
