@@ -114,7 +114,7 @@ sub add_closes_header {
     print qq#Adding "Closes:" header ... #;
     my $confirm = E_NO;
     
-    my $header = "Closes: $close_url\n---";
+    my $header = "\nCloses: $close_url\n---";
     my @patch = ();
     
     for (split /\n/, $patch) {
