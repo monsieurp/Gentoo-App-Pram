@@ -1,3 +1,6 @@
+0.005000
+- Strip $Id$ from commits.
+
 0.004000
 - Make --signoff optional.
 
