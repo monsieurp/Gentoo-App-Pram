@@ -147,7 +147,9 @@ sub add_closes_header {
     my $header = "Closes: $close_url\n---";
     my @patch = ();
 
-    for (split /\n/, $patch) {
+    open my $fh, '<', \$patch;
+
+    while (<$fh>) {
         chomp;
         # Some folks might add this header already to their PR
         # so don't add it twice.
@@ -159,6 +161,8 @@ sub add_closes_header {
         }
         push @patch, "$_\n";
     }
+
+    close $fh;
 
     print "$confirm!\n";
 
