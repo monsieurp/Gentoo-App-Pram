@@ -79,10 +79,12 @@ sub run {
     $self->apply_patch(
         $editor,
         $git_command,
-        $self->add_closes_header(
-            $close_url,
-            $self->fetch_patch(
-                $patch_url
+        $self->check_for_id_header(
+            $self->add_closes_header(
+                $close_url,
+                $self->fetch_patch(
+                    $patch_url
+                )
             )
         )
     );
@@ -107,6 +109,34 @@ sub fetch_patch {
     return decode('UTF-8', $patch);
 }
 
+sub check_for_id_header {
+    @_ == 2 || die qq#Usage: check_for_id_header(patch)\n#;
+    my ($self, $patch) = @_;
+
+    print "Stripping \"\$Id\$\" header ... ";
+
+    my @patch = ();
+    my $regex = qr#\$Id\$#i;
+    my $clean = E_NO;
+
+    open my $fh, '<', \$patch;
+
+    while (<$fh>) {
+        chomp;
+        if (/$regex/) {
+            $clean = E_YES;
+            next;
+        }
+        push @patch, "$_\n";
+    }
+
+    close $fh;
+
+    print "$clean!\n";
+
+    return join '', @patch;
+}
+
 sub add_closes_header {
     @_ == 3 || die qq#Usage: add_closes_header(close_url, patch)\n#;
     my ($self, $close_url, $patch) = @_;
@@ -116,7 +146,7 @@ sub add_closes_header {
     
     my $header = "Closes: $close_url\n---";
     my @patch = ();
-    
+
     for (split /\n/, $patch) {
         chomp;
         # Some folks might add this header already to their PR
