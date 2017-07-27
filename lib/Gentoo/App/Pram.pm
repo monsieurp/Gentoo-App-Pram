@@ -79,12 +79,10 @@ sub run {
     $self->apply_patch(
         $editor,
         $git_command,
-        $self->check_for_id_header(
-            $self->add_closes_header(
-                $close_url,
-                $self->fetch_patch(
-                    $patch_url
-                )
+        $self->tweak_patch(
+            $close_url,
+            $self->fetch_patch(
+                $patch_url
             )
         )
     );
@@ -109,64 +107,23 @@ sub fetch_patch {
     return decode('UTF-8', $patch);
 }
 
-sub check_for_id_header {
-    @_ == 2 || die qq#Usage: check_for_id_header(patch)\n#;
-    my ($self, $patch) = @_;
-
-    print "Stripping \"\$Id\$\" header ... ";
-
-    my @patch = ();
-    my $regex = qr#\$Id\$#i;
-    my $clean = E_NO;
-
-    open my $fh, '<', \$patch;
-
-    while (<$fh>) {
-        chomp;
-        if (/$regex/) {
-            $clean = E_YES;
-            next;
-        }
-        push @patch, "$_\n";
-    }
-
-    close $fh;
-
-    print "$clean!\n";
-
-    return join '', @patch;
-}
-
-sub add_closes_header {
-    @_ == 3 || die qq#Usage: add_closes_header(close_url, patch)\n#;
+sub tweak_patch {
+    @_ == 3 || die qq#Usage: tweak_patch(close_url, patch)\n#;
     my ($self, $close_url, $patch) = @_;
 
     print qq#Adding "Closes:" header ... #;
+
     my $confirm = E_NO;
-    
-    my $header = "Closes: $close_url\n---";
-    my @patch = ();
 
-    open my $fh, '<', \$patch;
-
-    while (<$fh>) {
-        chomp;
-        # Some folks might add this header already to their PR
-        # so don't add it twice.
-        if ($patch !~ /Closes:/) {
-            if (/(\A---\Z)/) { 
-                s/$1/$header/g; 
-                $confirm = E_YES;
-            }
-        }
-        push @patch, "$_\n";
+    if (not $patch =~ /Closes:/) {
+        my $header = "Closes: $close_url\n---";
+        my $is_sub = $patch =~ s#---#$header#;
+        $is_sub and $confirm = E_YES;
     }
-
-    close $fh;
 
     print "$confirm!\n";
 
-    return join '', @patch;
+    return $patch;
 }
 
 sub apply_patch {
@@ -226,10 +183,11 @@ Requests.
 
 Fetch patch from $patch_url. Return patch as a string.
 
-=item * add_closes_header($close_url, $patch)
+=item * modify_patch($close_url, $patch)
 
-Add a "Closes:" header to each commit in $patch using $close_url. If the patch already
-contains such headers, skip this step.
+Modify the patch. For the time being, this function adds a "Closes:" header to
+each commit in $patch using $close_url. If the patch already contains such
+headers, skip this step.
 
 =item * apply_patch($editor, $git_command, $patch)
 

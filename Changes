@@ -1,5 +1,5 @@
 0.005000
-- Strip $Id$ from commits.
+- Slim down add_closes_header to a couple of lines.
 
 0.004000
 - Make --signoff optional.
