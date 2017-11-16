@@ -19,6 +19,8 @@ use constant E_YES   => colored('YES',   'green');
 use constant E_OK    => colored('OK',    'green');
 use constant E_MERGE => colored('MERGE', 'blue');
 
+use constant CLOSES_GITHUB => qr#\ACloses: https?://github\.com#;
+
 use Getopt::Long;
 use Pod::Usage;
 
@@ -115,7 +117,7 @@ sub tweak_patch {
 
     my $confirm = E_NO;
 
-    if (not $patch =~ /Closes:/) {
+    if (not $patch =~ CLOSES_GITHUB) {
         my $header = "Closes: $close_url\n---";
         my $is_sub = $patch =~ s#---#$header#;
         $is_sub and $confirm = E_YES;
@@ -207,8 +209,9 @@ This software is copyright (c) 2016 by Patrice Clement.
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
-=head1 AUTHOR
+=head1 AUTHORS
 
-Patrice Clement <monsieurp@gentoo.org> and Kent Fredric <kentnl@gentoo.org>.
+Patrice Clement <monsieurp@gentoo.org>
+Kent Fredric <kentnl@gentoo.org>
 
 =cut
