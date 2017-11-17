@@ -267,7 +267,7 @@ This software is copyright (c) 2016 by Patrice Clement.
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
-=head1 AUTHORS
+=head1 AUTHOR
 
 Patrice Clement <monsieurp@gentoo.org>
 Kent Fredric <kentnl@gentoo.org>

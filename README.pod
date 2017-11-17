@@ -52,6 +52,7 @@ the same terms as the Perl 5 programming language system itself.
 
 =head1 AUTHOR
 
-Patrice Clement <monsieurp@gentoo.org>, Kent Fredric <kentln@gentoo.org>.
+Patrice Clement <monsieurp@gentoo.org>
+Kent Fredric <kentln@gentoo.org>
 
 =cut
