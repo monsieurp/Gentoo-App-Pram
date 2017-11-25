@@ -119,9 +119,7 @@ sub fetch_patch {
     my $status = $response->{status};
     
     $status != 200 and die "\n" . E_ERROR . qq#! Unreachable URL! Got HTTP status $status!\n#;
-    
     my $patch = $response->{content};
-    chomp $patch;
 
     print E_OK . "!\n";
     
