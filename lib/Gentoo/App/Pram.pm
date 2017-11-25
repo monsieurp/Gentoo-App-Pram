@@ -221,8 +221,8 @@ Gentoo::App::Pram - Library to fetch a GitHub Pull Request as an am-like patch.
 
 The purpose of this module is to fetch Pull Requests from GitHub's CDN as
 am-like patches in order to facilitate the merging and closing of Pull
-Requests. This module also takes care of adding "Closes:" and "Bug:" which are
-Gentoo-specific. See GLEP 0066.
+Requests. This module also takes care of adding "Closes:" and "Bug:" headers to
+patches when necessary. See GLEP 0066.
 
 =head1 FUNCTIONS
 
@@ -236,13 +236,16 @@ Fetch patch from $patch_url. Return patch as a string.
 
 Modify the patch headers. This function only modifies the headers of the first
 commit. Namely:
-* Add a "Closes: https://github.com/XXX" header. Check first if it wasn't
-added already. This header is parsed by the Github bot upon merge. The bot
-then automatically closes the pull request. See
+
+* Add a "Closes: https://github.com/XXX" header. Check first if it wasn't added
+already by the contributor. This header is parsed by the Github bot upon merge.
+The bot then automatically closes the pull request. See
 https://help.github.com/articles/closing-issues-using-keywords for more info.
+
 * Add a "Bug: https://bugs.gentoo.org/XXX" header when the `--bug XXX` option
 is given. This header is parsed by the Gentoo Bugzilla bot upon merge. The bot
 then writes a message in the bug report. See GLEP 0066 for more info.
+
 * Add a "Closes: https://bugs.gentoo.org/XXX" header when the `--closes XXX`
 option is given. This header is parsed by the Gentoo Bugzilla bot upon merge.
 The bot then automatically closes the bug report. See GLEP 0066 for more info.
@@ -268,6 +271,7 @@ the same terms as the Perl 5 programming language system itself.
 =head1 AUTHOR
 
 Patrice Clement <monsieurp@gentoo.org>
+
 Kent Fredric <kentnl@gentoo.org>
 
 =cut
