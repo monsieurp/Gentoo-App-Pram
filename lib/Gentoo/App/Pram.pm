@@ -196,7 +196,7 @@ sub apply_patch {
     if ($answer =~ /^[Yy]$/) {
         $git_command = "$git_command $patch_location";
         print E_YES . "!\n";
-        print "Launching '$git_command' ... ";
+        print "Launching '$git_command' ... \n";
         $exit = system join ' ', $git_command;
         $exit eq 0 || die E_ERROR . qq#! Error when launching '$git_command': $!!\n#;
         print E_OK . "!\n";
