@@ -75,7 +75,19 @@ sub run {
     my $editor      = $self->{editor} || $ENV{EDITOR} || 'less';
 
     my $git_command = which('git') . ' am --keep-cr -S';
-    $self->{signoff} and $git_command = "$git_command -s";
+
+    # Automatically pass the Sign-Off option to the git am command if the
+    # repository is Gentoo.
+    if ($repo_name =~ /gentoo\/gentoo/) {
+        $git_command = "$git_command -s";
+    }
+
+    # But don't add the option again if the -s option is passed to pram.
+    if ($self->{signoff}) {
+        if ($repo_name !~ /gentoo\/gentoo/) {
+            $git_command = "$git_command -s";
+        }
+    }
 
     my $patch_url   = "https://patch-diff.githubusercontent.com/raw/$repo_name/pull/$pr_number.patch";
     $self->{pr_url} = "https://github.com/$repo_name/pull/$pr_number";
