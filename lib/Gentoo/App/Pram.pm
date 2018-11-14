@@ -265,7 +265,7 @@ The bot then automatically closes the bug report. See GLEP 0066 for more info.
 =item * apply_patch($editor, $git_command, $patch)
 
 Apply $patch onto HEAD of the current git repository using $git_command. This
-functions also shows $patch in $editor for a final review.
+function also shows $patch in $editor for a final review.
 
 =back
 
